@@ -1,5 +1,10 @@
 # Revision history for trivialini
 
+## 0.1.2.0 -- 2021-03-07
+
+* Simplify regex matching
+* Use TDFA instead of PCRE to minimize external dependencies
+
 ## 0.1.1.0 -- 2021-03-07
 
 * Add internal data type simplification (shows with Show)

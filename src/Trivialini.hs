@@ -1,8 +1,8 @@
 -- | Ultra light weight ini file parser
 module Trivialini (config, configFile) where
 
-import Data.Map     (Map, keys, empty, insert, (!))
-import Text.Regex   (mkRegex, matchRegex)
+import Data.Map         (Map, keys, empty, insert, (!))
+import Text.Regex.TDFA  ((=~))
 
 --
 --  Data structure and accessors
@@ -54,23 +54,18 @@ simplify config@(Config sec defs rest)
 rc :: String -> Map String String -> [String] -> Config
 -- Build config data line by line (first argument is the current section)
 rc sec values [] = Config sec values Empty
-rc sec values (line:lines) = case chkSec line of
-
-    -- It's a section
-    (Just [newS]) -> Config sec values $ rc newS empty lines
-
-    -- It's not a section
-    Nothing -> case chkKV line of
-
-        -- It's a key value assignment
-        (Just [key, value]) -> rc sec (insert key value values) lines
-
-        -- Neither: ignore
-        Nothing -> rc sec values lines
-
+rc sec values (line:lines)
+    | isSec     = Config sec values $ rc getSec empty lines
+    | isKV      = rc sec insKV lines
+    | otherwise = rc sec values lines -- No match: ignore that line
     where
-        chkSec  = matchRegex (mkRegex "^\\[(.+)\\]")
-        chkKV   = matchRegex (mkRegex "^(\\S+)\\s+=\\s+(.*)$")
+        rxSec   = "^\\[(.+)\\]"
+        rxKV    = "^([^ ]+) += +(.*)$"
+        isSec   = line =~ rxSec :: Bool
+        isKV    = line =~ rxKV  :: Bool
+        getSec  = let [[_, sec]] = line =~ rxSec :: [[String]] in sec
+        getKV   = let [[_, k, v]] = line =~ rxKV :: [[String]] in (k, v)
+        insKV   = let (k, v) = getKV in insert k v values
 
 --
 --  Public interface
