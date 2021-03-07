@@ -42,7 +42,14 @@ value conf sec key = s ! key
 
 readConfig :: String -> Config
 -- Preparation of config parsing
-readConfig = rc "default" empty . lines
+readConfig = simplify . rc "default" empty . lines
+
+-- Remove sections without definitions
+simplify :: Config -> Config
+simplify Empty = Empty
+simplify config@(Config sec defs rest)
+    | null defs = rest
+    | otherwise = config
 
 rc :: String -> Map String String -> [String] -> Config
 -- Build config data line by line (first argument is the current section)
