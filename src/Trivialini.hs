@@ -40,8 +40,8 @@ value conf sec key = s ! key
 --  Parsing data structure from text file
 --
 
-readConfig :: String -> Config
 -- Preparation of config parsing
+readConfig :: String -> Config
 readConfig = simplify . rc "default" empty . lines
 
 -- Remove sections without definitions
@@ -51,8 +51,8 @@ simplify config@(Config sec defs rest)
     | null defs = rest
     | otherwise = config
 
-rc :: String -> Map String String -> [String] -> Config
 -- Build config data line by line (first argument is the current section)
+rc :: String -> Map String String -> [String] -> Config
 rc sec values [] = Config sec values Empty
 rc sec values (line:lines)
     | isSec     = Config sec values $ rc getSec empty lines
@@ -71,12 +71,12 @@ rc sec values (line:lines)
 --  Public interface
 --
 
+-- | Return the config value for a given section and key from the given config
 config :: String -> String -> String -> String
--- ^Return the config value for a given section and key from the given config
 config = value . readConfig
 
+-- | Return the config file value for a given section and key
 configFile :: String -> String -> String -> IO String
--- ^Return the config file value for a given section and key
 configFile file sec key = do
     content <- readFile file
     return $ config content sec key
