@@ -1,5 +1,5 @@
 -- | Ultra light weight ini file parser
-module Trivialini (config, configFile) where
+module Trivialini (Config(..), completeConfig, config, configFile) where
 
 import Data.Map         (Map, keys, empty, insert, (!))
 import Text.Regex.TDFA  ((=~))
@@ -70,6 +70,10 @@ rc sec values (line:lines)
 --
 --  Public interface
 --
+
+-- | Return the complete config data from the given filename
+completeConfig :: String -> IO Config
+completeConfig file = readConfig <$> readFile file
 
 -- | Return the config value for a given section and key from the given config
 config :: String -> String -> String -> String

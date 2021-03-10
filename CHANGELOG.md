@@ -1,5 +1,9 @@
 # Revision history for trivialini
 
+## 0.1.3.0 -- 2021-03-10
+
+* Add a completeConfig method for the whole data structure
+
 ## 0.1.2.0 -- 2021-03-07
 
 * Simplify regex matching
