@@ -2,6 +2,8 @@
 
 **Ultra light weight ini file parser, written in Haskell**
 
+[![Build Status](https://travis-ci.com/memowe/trivialini.svg?branch=main)](https://travis-ci.com/memowe/trivialini)
+
 ## Overview
 
 Consider a simple ini-like file `config.ini` like this:
