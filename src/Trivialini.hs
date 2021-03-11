@@ -10,6 +10,7 @@ import Text.Regex.TDFA  ((=~))
 
 -- data structure for "ini" file representation
 data Config = Empty | Config String (Map String String) Config
+    deriving (Eq)
 
 instance Show Config where
     show Empty = ""
