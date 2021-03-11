@@ -3,6 +3,7 @@
 ##
 
 * Minor code cleanups
+* Make readConfig (String parsing) public
 
 ## 0.1.3.0 -- 2021-03-10
 

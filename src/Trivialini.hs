@@ -1,5 +1,5 @@
 -- | Ultra light weight ini file parser
-module Trivialini (Config(..), completeConfig, config, configFile) where
+module Trivialini (Config(..), readConfig, completeConfig, config, configFile) where
 
 import Data.Map         (Map, keys, empty, insert, (!))
 import Text.Regex.TDFA  ((=~))
@@ -35,10 +35,6 @@ value conf sec key = s ! key
 --  Parsing data structure from text file
 --
 
--- Preparation of config parsing
-readConfig :: String -> Config
-readConfig = simplify . rc "default" empty . lines
-
 -- Build config data line by line (first argument is the current section)
 rc :: String -> Map String String -> [String] -> Config
 rc sec values [] = Config sec values Empty
@@ -65,6 +61,10 @@ simplify config@(Config sec defs rest)
 --
 --  Public interface
 --
+
+-- | Parse a string
+readConfig :: String -> Config
+readConfig = simplify . rc "default" empty . lines
 
 -- | Return the complete config data from the given filename
 completeConfig :: String -> IO Config
