@@ -1,5 +1,9 @@
 # Revision history for trivialini
 
+##
+
+* Minor code cleanups
+
 ## 0.1.3.0 -- 2021-03-10
 
 * Add a completeConfig method for the whole data structure

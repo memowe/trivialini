@@ -19,11 +19,6 @@ instance Show Config where
             defLns  = concatMap def $ keys defs
             def key = key ++ " = " ++ defs ! key ++ "\n"
 
--- Extract the list of all section names
-sections :: Config -> [String]
-sections Empty                  = []
-sections (Config name _ rest)   = name : sections rest
-
 -- Extract the map of config values for a given section name
 section :: Config -> String -> Map String String
 section Empty _                         = empty
