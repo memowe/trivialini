@@ -44,13 +44,6 @@ value conf sec key = s ! key
 readConfig :: String -> Config
 readConfig = simplify . rc "default" empty . lines
 
--- Remove sections without definitions
-simplify :: Config -> Config
-simplify Empty = Empty
-simplify config@(Config sec defs rest)
-    | null defs = rest
-    | otherwise = config
-
 -- Build config data line by line (first argument is the current section)
 rc :: String -> Map String String -> [String] -> Config
 rc sec values [] = Config sec values Empty
@@ -66,6 +59,13 @@ rc sec values (line:lines)
         getSec  = let [[_, sec]] = line =~ rxSec :: [[String]] in sec
         getKV   = let [[_, k, v]] = line =~ rxKV :: [[String]] in (k, v)
         insKV   = let (k, v) = getKV in insert k v values
+
+-- Remove sections without definitions
+simplify :: Config -> Config
+simplify Empty = Empty
+simplify config@(Config sec defs rest)
+    | null defs = rest
+    | otherwise = config
 
 --
 --  Public interface
