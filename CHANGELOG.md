@@ -1,5 +1,11 @@
 # Revision history for trivialini
 
+## 0.2.0.0 -- 2021-03-12
+
+* Breaking API changes:
+    * use "ini" instead of "config" everywhere
+    * Export all accessor functions
+
 ## 0.1.4.0 -- 2021-03-12
 
 * Minor code cleanups

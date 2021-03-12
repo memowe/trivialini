@@ -1,7 +1,7 @@
 module Main where
 
 import System.Exit  ( exitFailure )
-import Trivialini   ( Config, Config(..), readConfig )
+import Trivialini   ( Ini, Ini(..), iniSectionMap, iniValue, readIni )
 import Data.Map     ( fromList, (!) )
 
 exampleIni =
@@ -13,19 +13,31 @@ exampleIni =
     \answer = 17\n\
     \"
 
-expectedConfig =
-    Config "default" (fromList [("foo", "bar"), ("answer", "42")]) $
-    Config "section name" (fromList [("answer", "17")]) Empty
+expectedDefaultAnswer  = "42"
+expectedDefaultSection = fromList [
+        ("foo", "bar"),
+        ("answer", expectedDefaultAnswer)
+    ]
+expectedIni =
+    Ini "default" expectedDefaultSection $
+    Ini "section name" (fromList [("answer", "17")]) Empty
 
-parsedConfig = readConfig exampleIni
+parsedIni = readIni exampleIni
 
-roundTripConfig = readConfig $ show parsedConfig
+iniParsingOK :: Bool
+iniParsingOK
+    =   parsedIni == expectedIni
+    &&  parsedIni == roundTripIni
+    where roundTripIni = readIni $ show parsedIni
 
-configParsingOK :: String -> Config -> Bool
-configParsingOK ini expected =
-        parsedConfig == expectedConfig
-    &&  parsedConfig == roundTripConfig
+iniAccessOK :: Bool
+iniAccessOK
+    =   defaultMap      == expectedDefaultSection
+    &&  defaultAnswer   == expectedDefaultAnswer
+    where
+        defaultMap      = iniSectionMap parsedIni "default"
+        defaultAnswer   = iniValue parsedIni "default" "answer"
 
-main = if configParsingOK exampleIni expectedConfig
+main = if iniParsingOK && iniAccessOK
     then putStrLn "OK"
     else putStrLn "Nope" >> exitFailure

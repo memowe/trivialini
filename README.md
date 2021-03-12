@@ -23,15 +23,29 @@ With **trivialini**, this data structure can be accessed like this:
 ```
 GHCi, version 8.6.5
 Prelude> :m Trivialini
-Prelude Trivialini> configFile "config.ini" "something else" "name"
+Prelude Trivialini> iniFileValue "config.ini" "something else" "name"
 "Boaty McBoatface"
-Prelude Trivialini> configFile "config.ini" "default" "foo"
+Prelude Trivialini> iniFileValue "config.ini" "default" "foo"
 "bar"
 ```
 
-`configFile`'s first argument is interpreted as a filename, followed by the section and key of the requested value.
+`iniFileValue`'s first argument is interpreted as a filename, followed by the section and key of the requested value.
 
-There's also a pure function `config` that works on a source String instead of a file name and a function `completeConfig` that returns the complete `Config` data structure for a given file name.
+### API overview
+
+**Parsing `Ini` data**
+
+- `readIni` parses Ini data from a given ini string
+- `readIniFile` parses Ini data from a file given by file name
+
+**`Ini`data accessors**
+
+- `iniSectionMap` returns the key-value map of an `Ini` for a given section name
+- `iniValue` returns a value of an `Ini` for a given section name and key
+
+**Combined**
+
+- `iniFileValue` returns a value for a given section name and key, loaded from a file given by file name
 
 ## Author and License
 
