@@ -1,5 +1,9 @@
 # Revision history for trivialini
 
+## TODO
+
+* Allow arbitrary whitespace inbetween key-value pairs
+
 ## 0.2.0.0 -- 2021-03-12
 
 * Breaking API changes:

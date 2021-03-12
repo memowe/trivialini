@@ -52,7 +52,7 @@ _rc sec values (line:lines)
     | otherwise = _rc sec values lines -- No match: ignore that line
     where
         rxSec   = "^\\[(.+)\\]"
-        rxKV    = "^([^ ]+) += +(.*)$"
+        rxKV    = "^([^ ]+) *= *(.*)$"
         isSec   = line =~ rxSec :: Bool
         isKV    = line =~ rxKV  :: Bool
         getSec  = let [[_, sec]] = line =~ rxSec :: [[String]] in sec

@@ -7,10 +7,10 @@ import Data.Map     ( fromList, (!) )
 exampleIni =
     "foo = bar\n\
     \\n\
-    \answer = 42\n\
+    \answer    =42\n\
     \[section name]\n\
     \not a key = nope\n\
-    \answer = 17\n\
+    \answer= 17\n\
     \"
 
 expectedDefaultAnswer  = "42"
