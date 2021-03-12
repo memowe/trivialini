@@ -1,6 +1,6 @@
 # Revision history for trivialini
 
-##
+## 0.1.4.0 -- 2021-03-12
 
 * Minor code cleanups
 * Make readConfig (String parsing) public
