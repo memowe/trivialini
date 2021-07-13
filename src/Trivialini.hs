@@ -1,70 +1,61 @@
 -- | Ultra light weight ini file parser
-module Trivialini (
-        Ini(..), iniSectionMap, iniValue,
-        readIni, readIniFile,
-        iniFileValue
-    ) where
+module Trivialini ( Ini(..), showIni, readIni, readIniFile ) where
 
-import Data.Map         (Map, keys, empty, insert, (!))
-import Text.Regex.TDFA  ((=~))
+import Data.Map ( assocs, fromList, Map )
+import Text.ParserCombinators.ReadP
+    ( between, char, many, munch1, readP_to_S,
+      satisfy, skipMany1, skipSpaces, ReadP )
 
 --
 -- Data structure and accessors
 --
 
 -- | data structure for "ini" file representation
-data Ini = Empty | Ini String (Map String String) Ini
-    deriving (Eq)
+type Ini = Map String (Map String String)
 
-instance Show Ini where
-    show Empty = ""
-    show (Ini sec defs rest) = secLn ++ defLns ++ "\n" ++ show rest
-        where
-            secLn   = "[" ++ sec ++ "]\n"
-            defLns  = concatMap def $ keys defs
-            def key = key ++ " = " ++ defs ! key ++ "\n"
+_showMap :: Map String String -> String
+_showMap = unlines . map line . assocs
+    where line (k, v) = k ++ " = " ++ v
 
--- | Extract the map of ini values for a given section name
-iniSectionMap :: Ini -> String -> Map String String
-iniSectionMap Empty _  = empty
-iniSectionMap (Ini name map rest) query
-    | name == query = map
-    | otherwise     = iniSectionMap rest query
-
--- | Extract an ini data value for a given section and key
-iniValue :: Ini -> String -> String -> String
-iniValue ini sec key = iniSectionMap ini sec ! key
+showIni :: Ini -> String
+showIni = unlines . map section . assocs
+    where section (name, sec) = "[" ++ name ++ "]\n" ++ _showMap sec
 
 --
 -- Parsing Ini data structures
 --
 
+sectionName :: ReadP String
+sectionName = do
+    name <- between (char '[') (char ']') (munch1 (/= ']'))
+    skipMany1 (char '\n')
+    return name
+
+pair :: ReadP (String, String)
+pair = do
+    keyHead <- satisfy (`notElem` "\n =[")
+    keyRest <- munch1 (`notElem` "\n =")
+    skipSpaces
+    char '='
+    skipSpaces
+    value <- munch1 (/= '\n')
+    skipMany1 (char '\n')
+    return (keyHead:keyRest, value)
+
+section :: ReadP (String, Map String String)
+section = do
+    name <- sectionName
+    pairs <- many pair
+    return (name, fromList pairs)
+
+sections :: ReadP Ini
+sections = do
+    secs <- many section
+    return $ fromList secs
+
 -- | Parse an ini string
 readIni :: String -> Ini
-readIni = _simplify . _rc "default" empty . lines
-
--- Helper: build ini data line by line (first argument: current section)
-_rc :: String -> Map String String -> [String] -> Ini
-_rc sec values [] = Ini sec values Empty
-_rc sec values (line:lines)
-    | isSec     = Ini sec values $ _rc getSec empty lines
-    | isKV      = _rc sec insKV lines
-    | otherwise = _rc sec values lines -- No match: ignore that line
-    where
-        rxSec   = "^\\[(.+)\\]"
-        rxKV    = "^([^ ]+) *= *(.*)$"
-        isSec   = line =~ rxSec :: Bool
-        isKV    = line =~ rxKV  :: Bool
-        getSec  = let [[_, sec]] = line =~ rxSec :: [[String]] in sec
-        getKV   = let [[_, k, v]] = line =~ rxKV :: [[String]] in (k, v)
-        insKV   = let (k, v) = getKV in insert k v values
-
--- Helper: remove sections without definitions
-_simplify :: Ini -> Ini
-_simplify Empty = Empty
-_simplify ini@(Ini sec defs rest)
-    | null defs = rest
-    | otherwise = ini
+readIni = fst . last . readP_to_S sections
 
 --
 --  Convenience file system access
@@ -73,9 +64,3 @@ _simplify ini@(Ini sec defs rest)
 -- | Return the complete ini data from the given filename
 readIniFile :: String -> IO Ini
 readIniFile file = readIni <$> readFile file
-
--- | Return the ini file value for a given filename, section and key
-iniFileValue :: String -> String -> String -> IO String
-iniFileValue file sec key = do
-    content <- readFile file
-    return $ iniValue (readIni content) sec key
