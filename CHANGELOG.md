@@ -7,6 +7,7 @@
     * No default section anymore (it was just a regex workaround anyway)
 * Switch from regex to parser combinators
 * Allow arbitrary whitespace inbetween key-value pairs
+* Split into single-purpose modules
 
 ## 0.2.0.0 -- 2021-03-12
 

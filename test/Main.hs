@@ -1,8 +1,9 @@
 module Main where
 
-import System.Exit  ( exitFailure )
-import Trivialini   ( showIni, readIni )
-import Data.Map     ( fromList )
+import System.Exit          ( exitFailure )
+import Trivialini.Ini       ( showIni )
+import Trivialini.Parser    ( readIni )
+import Data.Map             ( fromList )
 
 exampleIni =
     "[xnorfzt]\n\
