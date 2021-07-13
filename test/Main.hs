@@ -1,43 +1,34 @@
 module Main where
 
-import System.Exit  ( exitFailure )
-import Trivialini   ( Ini, Ini(..), iniSectionMap, iniValue, readIni )
-import Data.Map     ( fromList, (!) )
+import System.Exit          ( exitFailure )
+import Trivialini.Ini       ( showIni )
+import Trivialini.Parser    ( readIni )
+import Data.Map             ( fromList )
 
 exampleIni =
-    "foo = bar\n\
+    "[xnorfzt]\n\
+    \foo = bar\n\
     \\n\
     \answer    =42\n\
     \[section name]\n\
+    \baz    =      quux\n\
     \not a key = nope\n\
-    \answer= 17\n\
+    \ignored= 17\n\
     \"
 
-expectedDefaultAnswer  = "42"
-expectedDefaultSection = fromList [
-        ("foo", "bar"),
-        ("answer", expectedDefaultAnswer)
+expectedIni = fromList [
+        ("xnorfzt", fromList [("foo", "bar"), ("answer", "42")]),
+        ("section name", fromList [("baz", "quux")])
     ]
-expectedIni =
-    Ini "default" expectedDefaultSection $
-    Ini "section name" (fromList [("answer", "17")]) Empty
-
-parsedIni = readIni exampleIni
 
 iniParsingOK :: Bool
 iniParsingOK
     =   parsedIni == expectedIni
     &&  parsedIni == roundTripIni
-    where roundTripIni = readIni $ show parsedIni
-
-iniAccessOK :: Bool
-iniAccessOK
-    =   defaultMap      == expectedDefaultSection
-    &&  defaultAnswer   == expectedDefaultAnswer
     where
-        defaultMap      = iniSectionMap parsedIni "default"
-        defaultAnswer   = iniValue parsedIni "default" "answer"
+        parsedIni       = readIni exampleIni
+        roundTripIni    = (readIni . showIni) parsedIni
 
-main = if iniParsingOK && iniAccessOK
+main = if iniParsingOK
     then putStrLn "OK"
     else putStrLn "Nope" >> exitFailure

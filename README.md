@@ -9,6 +9,7 @@
 Consider a simple ini-like file `config.ini` like this:
 
 ```
+[something]
 foo = bar
 
 [something else]
@@ -16,36 +17,21 @@ answer = 42
 name = Boaty McBoatface
 ```
 
-There are two *sections* (inbetween `[` and `]`) defined, `something else` and the anonymous section before. These sections contain a dictionary of Strings each, the keys being something without whitespace, followed by `=` and anything else until end of the line.
+There are two *sections* (inbetween `[` and `]`) defined, `something` and `something else`. These sections contain a dictionary of Strings each, the keys being something without whitespace, followed by `=` and anything else until end of the line.
 
-With **trivialini**, this data structure can be accessed like this:
+**trivialini** parses this data structure as an `Ini`, which is simply a map of maps of strings:
 
-```
-GHCi, version 8.6.5
-Prelude> :m Trivialini
-Prelude Trivialini> iniFileValue "config.ini" "something else" "name"
-"Boaty McBoatface"
-Prelude Trivialini> iniFileValue "config.ini" "default" "foo"
-"bar"
+```bash
+$ cat config.ini
+[foo]
+bar = 42
 ```
 
-`iniFileValue`'s first argument is interpreted as a filename, followed by the section and key of the requested value.
-
-### API overview
-
-**Parsing `Ini` data**
-
-- `readIni` parses Ini data from a given ini string
-- `readIniFile` parses Ini data from a file given by file name
-
-**`Ini`data accessors**
-
-- `iniSectionMap` returns the key-value map of an `Ini` for a given section name
-- `iniValue` returns a value of an `Ini` for a given section name and key
-
-**Combined**
-
-- `iniFileValue` returns a value for a given section name and key, loaded from a file given by file name
+```
+*Trivialini Data.Map> ini <- readIniFile "config.ini"
+*Trivialini Data.Map> ini ! "foo" ! "bar"
+"42"
+```
 
 ## Author and License
 
