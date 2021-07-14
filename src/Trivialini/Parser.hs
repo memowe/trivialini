@@ -1,5 +1,5 @@
 -- | The parser of ini files
-module Trivialini.Parser ( readIni ) where
+module Trivialini.Parser ( readIni, parseIni ) where
 
 import Trivialini.Ini ( Ini )
 import Data.Map ( fromList, Map )
@@ -38,3 +38,7 @@ sections = do
 -- | Parse an ini string
 readIni :: String -> Ini
 readIni = fst . last . readP_to_S sections
+
+-- | Ini string parser, useful for debugging
+parseIni :: ReadS Ini
+parseIni = readP_to_S sections
