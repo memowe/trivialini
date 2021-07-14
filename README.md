@@ -2,7 +2,7 @@
 
 **Ultra light weight ini file parser, written in Haskell**
 
-[![Build Status](https://travis-ci.com/memowe/trivialini.svg?branch=main)](https://travis-ci.com/memowe/trivialini)
+[![Build and test](https://github.com/memowe/trivialini/actions/workflows/test.yml/badge.svg)](https://github.com/memowe/trivialini/actions/workflows/test.yml)
 
 ## Overview
 
