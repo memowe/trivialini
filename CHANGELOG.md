@@ -1,6 +1,6 @@
 # Revision history for trivialini
 
-## TODO
+## 0.3.0.0 -- 2021-07-14
 
 * Breaking changes:
     * Ini = Map of Map of Strings from now on
