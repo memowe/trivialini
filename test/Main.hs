@@ -12,13 +12,15 @@ exampleIni =
     \answer    =42\n\
     \[section name]\n\
     \baz    =      quux\n\
-    \not a key = nope\n\
-    \ignored= 17\n\
+    \ is a valid key = yes\n\
+    \seventeen= 17\n\
     \"
 
 expectedIni = fromList [
         ("xnorfzt", fromList [("foo", "bar"), ("answer", "42")]),
-        ("section name", fromList [("baz", "quux")])
+        ("section name", fromList [
+            ("baz", "quux"), ("is a valid key", "yes"), ("seventeen", "17")
+        ])
     ]
 
 iniParsingOK :: Bool

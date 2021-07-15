@@ -2,6 +2,7 @@
 module Trivialini.Parser ( readIni, parseIni ) where
 
 import Trivialini.Ini ( Ini )
+import Data.Char ( isSpace )
 import Data.Map ( fromList, Map )
 import Text.ParserCombinators.ReadP
     ( between, char, many, munch1, readP_to_S,
@@ -15,14 +16,21 @@ sectionName = do
 
 pair :: ReadP (String, String)
 pair = do
-    keyHead <- satisfy (`notElem` "\n =[")
-    keyRest <- munch1 (`notElem` "\n =")
     skipSpaces
+    keyHead <- satisfy (`notElem` "\n =[")
+    keyRest <- removeTrailingSpaces <$> munch1 (`notElem` "\n=")
     char '='
     skipSpaces
     value <- munch1 (/= '\n')
     skipMany1 (char '\n')
     return (keyHead:keyRest, value)
+  where
+    removeTrailingSpaces :: String -> String
+    removeTrailingSpaces = reverse . removeLeadingSpaces . reverse
+      where
+        removeLeadingSpaces [] = []
+        removeLeadingSpaces str@(x : xs) | isSpace x = removeLeadingSpaces xs
+                                         | otherwise = str
 
 section :: ReadP (String, Map String String)
 section = do
