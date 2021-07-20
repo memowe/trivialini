@@ -3,6 +3,7 @@ module Trivialini.Parser ( readIni, parseIni ) where
 
 import Trivialini.Ini ( Ini )
 import Data.Char ( isSpace )
+import Data.List ( dropWhileEnd )
 import Data.Map ( fromList, Map )
 import Text.ParserCombinators.ReadP
     ( between, char, many, munch1, readP_to_S,
@@ -25,12 +26,7 @@ pair = do
     skipMany1 (char '\n')
     return (keyHead:keyRest, value)
   where
-    removeTrailingSpaces :: String -> String
-    removeTrailingSpaces = reverse . removeLeadingSpaces . reverse
-      where
-        removeLeadingSpaces [] = []
-        removeLeadingSpaces str@(x : xs) | isSpace x = removeLeadingSpaces xs
-                                         | otherwise = str
+    removeTrailingSpaces = dropWhileEnd isSpace
 
 section :: ReadP (String, Map String String)
 section = do
