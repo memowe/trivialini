@@ -17,7 +17,7 @@ answer = 42
 name = Boaty McBoatface
 ```
 
-There are two *sections* (inbetween `[` and `]`) defined, `something` and `something else`. These sections contain a dictionary of Strings each, the keys being something without whitespace, followed by `=` and anything else until end of the line.
+There are two *sections* (inbetween `[` and `]`) defined, `something` and `something else`. These sections contain a dictionary of Strings each, the keys being some string followed by `=`, and anything else until end of the line as values.
 
 **trivialini** parses this data structure as an `Ini`, which is simply a map of maps of strings:
 
@@ -32,6 +32,10 @@ bar = 42
 *Trivialini Data.Map> ini ! "foo" ! "bar"
 "42"
 ```
+
+## Contributors
+
+- Alexander Pankoff (@ccntrq)
 
 ## Author and License
 
