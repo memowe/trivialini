@@ -6,7 +6,7 @@ import Data.Char ( isSpace )
 import Data.List ( dropWhileEnd )
 import Data.Map ( fromList, Map )
 import Text.ParserCombinators.ReadP
-    ( between, char, many, munch1, readP_to_S,
+    ( between, char, many, munch, munch1, readP_to_S,
       satisfy, skipMany, skipMany1, ReadP )
 
 sectionName :: ReadP String
@@ -19,7 +19,7 @@ pair :: ReadP (String, String)
 pair = do
     skipMany (char ' ')
     keyHead <- satisfy (`notElem` "\n =[")
-    keyRest <- removeTrailingSpaces <$> munch1 (`notElem` "\n=")
+    keyRest <- removeTrailingSpaces <$> munch (`notElem` "\n=")
     char '='
     skipMany (char ' ')
     value <- munch1 (/= '\n')
