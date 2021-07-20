@@ -11,16 +11,12 @@ exampleIni =
     \\n\
     \answer    =42\n\
     \[section name]\n\
-    \baz    =      quux\n\
-    \ is a valid key = yes\n\
-    \seventeen= 17\n\
+    \ baz quux   =      quuux\n\
     \"
 
 expectedIni = fromList [
         ("xnorfzt", fromList [("foo", "bar"), ("answer", "42")]),
-        ("section name", fromList [
-            ("baz", "quux"), ("is a valid key", "yes"), ("seventeen", "17")
-        ])
+        ("section name", fromList [("baz quux", "quuux")])
     ]
 
 iniParsingOK :: Bool
