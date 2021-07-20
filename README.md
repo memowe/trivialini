@@ -33,6 +33,10 @@ bar = 42
 "42"
 ```
 
+## Contributors
+
+- Alexander Pankoff (@ccntrq)
+
 ## Author and License
 
 Copyright (c) 2021 Mirko Westermeier

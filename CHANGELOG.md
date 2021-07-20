@@ -1,5 +1,9 @@
 # Revision history for trivialini
 
+## TODO
+
+* Allow whitespace in keys (Alexander Pankoff @ccntrq)
+
 ## 0.3.0.0 -- 2021-07-14
 
 * Breaking changes:
