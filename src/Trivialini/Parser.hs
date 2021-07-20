@@ -19,14 +19,12 @@ pair :: ReadP (String, String)
 pair = do
     skipMany (char ' ')
     keyHead <- satisfy (`notElem` "\n =[")
-    keyRest <- removeTrailingSpaces <$> munch (`notElem` "\n=")
+    keyRest <- dropWhileEnd isSpace <$> munch (`notElem` "\n=")
     char '='
     skipMany (char ' ')
     value <- munch1 (/= '\n')
     skipMany1 (char '\n')
     return (keyHead:keyRest, value)
-  where
-    removeTrailingSpaces = dropWhileEnd isSpace
 
 section :: ReadP (String, Map String String)
 section = do
