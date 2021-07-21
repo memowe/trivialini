@@ -11,7 +11,7 @@ import Text.ParserCombinators.ReadP
 
 sectionName :: ReadP String
 sectionName = do
-    name <- between (char '[') (char ']') (munch1 (/= ']'))
+    name <- between (char '[') (char ']') (munch1 (`notElem` "\n]"))
     skipMany1 (char '\n')
     return name
 
