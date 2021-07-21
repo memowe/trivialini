@@ -39,8 +39,8 @@ bar = 42
 
 [![Contributor Covenant 2.0](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant%202.0-8f761b.svg?style=flat&logo=adguard&logoColor=lightgray)](CODE_OF_CONDUCT.md)
 
-- Alexander Pankoff (@ccntrq)
-- Mirko Westermeier (@memowe)
+- Alexander Pankoff ([@ccntrq](https://github.com/ccntrq))
+- Mirko Westermeier ([@memowe](https://github.com/memowe))
 
 ## Author and License
 
