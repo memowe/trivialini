@@ -3,6 +3,8 @@
 **Ultra light weight ini file parser, written in Haskell**
 
 [![Build and test](https://github.com/memowe/trivialini/actions/workflows/test.yml/badge.svg)](https://github.com/memowe/trivialini/actions/workflows/test.yml)
+[![Publish API docs](https://github.com/memowe/trivialini/actions/workflows/haddock-pages.yml/badge.svg)](https://github.com/memowe/trivialini/actions/workflows/haddock-pages.yml)
+[![API docs](https://img.shields.io/badge/API%20docs-Haddock-5e5184?style=flat&logo=haskell&logoColor=lightgray)](https://mirko.westermeier.de/trivialini/apidocs/)
 
 ## Overview
 
