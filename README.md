@@ -37,6 +37,8 @@ bar = 42
 
 ## Contributors
 
+[![Contributor Covenant 2.0](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg?style=flat&logo=adguard&logoColor=lightgray)](CODE_OF_CONDUCT.md)
+
 - Alexander Pankoff (@ccntrq)
 
 ## Author and License
