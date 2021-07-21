@@ -60,6 +60,9 @@ jobs:
           name: haddock-html
           path: ${{ env.PAGES_DIR }}/${{ env.PAGES_APIDOCS_DIR }}
 
+      - name: Disable GitHub Pages' Jekyll
+        run: touch $PAGES_DIR/.nojekyll
+
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2
         with:
