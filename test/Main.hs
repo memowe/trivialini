@@ -1,6 +1,7 @@
 module Main where
 
-import System.Exit          ( exitFailure )
+import Test.Tasty           ( defaultMain, testGroup )
+import Test.Tasty.HUnit     ( testCase, (@?=) )
 import Trivialini.Ini       ( showIni )
 import Trivialini.Parser    ( readIni )
 import Data.Map             ( fromList )
@@ -20,14 +21,11 @@ expectedIni = fromList [
         ("section name", fromList [("baz quux", "quuux")])
     ]
 
-iniParsingOK :: Bool
-iniParsingOK
-    =   parsedIni == expectedIni
-    &&  parsedIni == roundTripIni
-    where
-        parsedIni       = readIni exampleIni
-        roundTripIni    = (readIni . showIni) parsedIni
+testIniParsing = testGroup "Ini parsing"
+    [ testCase "Complex ini file" $
+        readIni exampleIni @?= expectedIni
+    , testCase "read . show . parse = parse" $
+        (readIni . showIni . readIni) exampleIni @?= expectedIni
+    ]
 
-main = if iniParsingOK
-    then putStrLn "OK"
-    else putStrLn "Nope" >> exitFailure
+main = defaultMain $ testGroup "Unit tests" [testIniParsing]
