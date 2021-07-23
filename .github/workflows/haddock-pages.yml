@@ -1,6 +1,6 @@
 name: Publish API docs
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   HADDOCK_DIR: haddock-html
