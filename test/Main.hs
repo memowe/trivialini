@@ -24,7 +24,7 @@ expectedIni = fromList [
 testIniParsing = testGroup "Ini parsing"
     [ testCase "Complex ini file" $
         readIni exampleIni @?= expectedIni
-    , testCase "read . show . parse = parse" $
+    , testCase "parse . show . parse = parse" $
         (readIni . showIni . readIni) exampleIni @?= expectedIni
     ]
 
