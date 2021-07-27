@@ -1,8 +1,12 @@
 # Revision history for trivialini
 
-## TODO
+## 0.3.1.0 -- 2021-07-27
 
 * Allow whitespace in keys (Alexander Pankoff @ccntrq)
+* Make section headers a little bit more strict
+* Improve test suite
+* Add Haddock API docs generation to GitHub Pages
+* Improve parser readability
 
 ## 0.3.0.0 -- 2021-07-14
 
