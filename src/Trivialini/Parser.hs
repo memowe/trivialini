@@ -9,9 +9,12 @@ import Text.ParserCombinators.ReadP
     ( between, char, many, munch, munch1, readP_to_S,
       satisfy, skipMany, skipMany1, ReadP )
 
+trim :: String -> String
+trim = dropWhile (==' ') . dropWhileEnd (==' ')
+
 sectionName :: ReadP String
 sectionName = do
-    name <- between (char '[') (char ']') (munch1 (`notElem` "=\n]"))
+    name <- trim <$> between (char '[') (char ']') (munch1 (`notElem` "=\n]"))
     skipMany1 (char '\n')
     return name
 
@@ -19,11 +22,9 @@ pair :: ReadP (String, String)
 pair = do
     key <- trim <$> munch1 (`notElem` "\n[=")
     char '='
-    skipMany (char ' ')
-    value <- munch1 (/= '\n')
+    value <- trim <$> munch1 (/= '\n')
     skipMany1 (char '\n')
     return (key, value)
-    where trim = dropWhile (==' ') . dropWhileEnd (==' ')
 
 section :: ReadP (String, Map String String)
 section = do
