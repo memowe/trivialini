@@ -11,20 +11,19 @@ import Text.ParserCombinators.ReadP
 
 sectionName :: ReadP String
 sectionName = do
-    name <- between (char '[') (char ']') (munch1 (`notElem` "\n]"))
+    name <- between (char '[') (char ']') (munch1 (`notElem` "=\n]"))
     skipMany1 (char '\n')
     return name
 
 pair :: ReadP (String, String)
 pair = do
-    skipMany (char ' ')
-    keyHead <- satisfy (`notElem` "\n =[")
-    keyRest <- dropWhileEnd isSpace <$> munch (`notElem` "\n=")
+    key <- trim <$> munch1 (`notElem` "\n[=")
     char '='
     skipMany (char ' ')
     value <- munch1 (/= '\n')
     skipMany1 (char '\n')
-    return (keyHead:keyRest, value)
+    return (key, value)
+    where trim = dropWhile (==' ') . dropWhileEnd (==' ')
 
 section :: ReadP (String, Map String String)
 section = do
