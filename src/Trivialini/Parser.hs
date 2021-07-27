@@ -12,20 +12,23 @@ import Text.ParserCombinators.ReadP
 trim :: String -> String
 trim = dropWhile (==' ') . dropWhileEnd (==' ')
 
+without :: String -> ReadP String
+without str = munch1 (`notElem` str)
+
 newlines :: ReadP ()
 newlines = skipMany1 (char '\n')
 
 sectionName :: ReadP String
 sectionName = do
-    name <- trim <$> between (char '[') (char ']') (munch1 (`notElem` "=\n]"))
+    name <- trim <$> between (char '[') (char ']') (without "=\n]")
     newlines
     return name
 
 pair :: ReadP (String, String)
 pair = do
-    key <- trim <$> munch1 (`notElem` "\n[=")
+    key <- trim <$> without "\n[="
     char '='
-    value <- trim <$> munch1 (/= '\n')
+    value <- trim <$> without "\n"
     newlines
     return (key, value)
 
