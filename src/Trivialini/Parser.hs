@@ -14,8 +14,8 @@ import Data.Char ( isSpace )
 import Data.List ( dropWhileEnd )
 import Data.Map ( fromList, Map )
 import Text.ParserCombinators.ReadP
-    ( between, char, many, munch, munch1, readP_to_S,
-      satisfy, skipMany, skipMany1, ReadP )
+  ( between, char, many, munch, munch1, readP_to_S,
+    satisfy, skipMany, skipMany1, ReadP )
 
 trim :: String -> String
 trim = dropWhile (==' ') . dropWhileEnd (==' ')
@@ -28,28 +28,28 @@ newlines = skipMany1 (char '\n')
 
 sectionName :: ReadP String
 sectionName = do
-    name <- trim <$> between (char '[') (char ']') (without "=\n]")
-    newlines
-    return name
+  name <- trim <$> between (char '[') (char ']') (without "=\n]")
+  newlines
+  return name
 
 pair :: ReadP (String, String)
 pair = do
-    key <- trim <$> without "\n[="
-    char '='
-    value <- trim <$> without "\n"
-    newlines
-    return (key, value)
+  key <- trim <$> without "\n[="
+  char '='
+  value <- trim <$> without "\n"
+  newlines
+  return (key, value)
 
 section :: ReadP (String, Map String String)
 section = do
-    name <- sectionName
-    pairs <- many pair
-    return (name, fromList pairs)
+  name  <- sectionName
+  pairs <- many pair
+  return (name, fromList pairs)
 
 sections :: ReadP Ini
 sections = do
-    secs <- many section
-    return $ fromList secs
+  secs <- many section
+  return $ fromList secs
 
 -- | Read 'Ini' data from a given 'String' in ini format.
 readIni :: String -> Ini

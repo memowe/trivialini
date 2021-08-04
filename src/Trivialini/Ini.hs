@@ -8,10 +8,10 @@ The Ini data type
 -}
 
 module Trivialini.Ini
-    (
-    -- * Ini data is a Map of Maps
-      Ini(..)
-    , showIni ) where
+  (
+  -- * Ini data is a Map of Maps
+    Ini(..)
+  , showIni ) where
 
 import Data.Map ( assocs, Map )
 
@@ -24,7 +24,7 @@ type Ini = Map String (Map String String)
 -- data.
 showIni :: Ini -> String
 showIni = unlines . map section . assocs
-    where
-        section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
-        pairs               = unlines . map pair . assocs
-        pair (k, v)         = k ++ " = " ++ v
+  where
+    section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
+    pairs               = unlines . map pair . assocs
+    pair (k, v)         = k ++ " = " ++ v
