@@ -1,10 +1,13 @@
 module Main where
 
-import Test.Tasty           ( defaultMain, testGroup )
+import Test.Tasty           ( defaultMain, testGroup, TestTree, withResource )
 import Test.Tasty.HUnit     ( testCase, (@?=) )
-import Trivialini.Ini       ( showIni )
+import Trivialini           ( readIniFile )
+import Trivialini.Ini       ( Ini(..), showIni )
 import Trivialini.Parser    ( readIni )
 import Data.Map             ( fromList )
+import System.FilePath      ( (</>) )
+import System.Directory     ( getTemporaryDirectory, removeFile )
 
 exampleIni =
   "[xnorfzt]\n\
@@ -22,10 +25,32 @@ expectedIni = fromList [
   ]
 
 testIniParsing = testGroup "Ini parsing"
-  [ testCase "Complex ini file" $
+  [ testCase "Complex ini data" $
       readIni exampleIni @?= expectedIni
   , testCase "parse . show . parse = parse" $
       (readIni . showIni . readIni) exampleIni @?= expectedIni
   ]
 
-main = defaultMain $ testGroup "Unit tests" [testIniParsing]
+testIniIO :: IO (FilePath, Ini) -> TestTree
+testIniIO ioData = testGroup "Read ini file"
+  [ testCase "Expected complete ini data" $ do
+      ini <- snd <$> ioData
+      ini @?= expectedIni
+  ]
+
+testIniFileReading = withResource io cleanup testIniIO
+  where
+    io = do
+      name  <- write
+      ini   <- readIniFile name
+      return (name, ini)
+    write = do
+      name <- (</> "trivialini-test.ini") <$> getTemporaryDirectory
+      writeFile name exampleIni
+      return name
+    cleanup = removeFile . fst
+
+main = defaultMain $ testGroup "Unit tests"
+  [ testIniParsing
+  , testIniFileReading
+  ]
