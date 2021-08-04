@@ -1,13 +1,13 @@
 module Main where
 
-import Test.Tasty           ( defaultMain, testGroup, TestTree, withResource )
-import Test.Tasty.HUnit     ( testCase, (@?=) )
-import Trivialini           ( readIniFile )
-import Trivialini.Ini       ( Ini(..), showIni )
-import Trivialini.Parser    ( readIni )
-import Data.Map             ( fromList )
-import System.FilePath      ( (</>) )
-import System.Directory     ( getTemporaryDirectory, removeFile )
+import Test.Tasty         ( defaultMain, testGroup, TestTree, withResource )
+import Test.Tasty.HUnit   ( testCase, (@?=) )
+import Trivialini         ( readIniFile )
+import Trivialini.Ini     ( Ini(..), showIni )
+import Trivialini.Parser  ( readIni )
+import Data.Map           ( fromList )
+import System.FilePath    ( (</>) )
+import System.Directory   ( getTemporaryDirectory, removeFile )
 
 exampleIni =
   "[xnorfzt]\n\

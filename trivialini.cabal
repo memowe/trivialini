@@ -14,13 +14,22 @@ library
     Trivialini,
     Trivialini.Ini,
     Trivialini.Parser
-  build-depends:    base, containers
-  hs-source-dirs:   src
+  build-depends:
+    base,
+    containers
+  hs-source-dirs: src
   default-language: Haskell2010
 
 Test-Suite test-trivialini
-  type:             exitcode-stdio-1.0
-  build-depends:    base, tasty, tasty-hunit, containers, filepath, directory, trivialini
-  hs-source-dirs:   test
-  main-is:          Main.hs
+  type: exitcode-stdio-1.0
+  build-depends:
+    base,
+    tasty,
+    tasty-hunit,
+    containers,
+    filepath,
+    directory,
+    trivialini
+  hs-source-dirs: test
+  main-is: Main.hs
   default-language: Haskell2010
