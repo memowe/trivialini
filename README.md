@@ -30,8 +30,8 @@ bar = 42
 ```
 
 ```
-*Trivialini Data.Map> ini <- readIniFile "config.ini"
-*Trivialini Data.Map> ini ! "foo" ! "bar"
+λ> ini <- readIniFile "config.ini"
+λ> ini ! "foo" ! "bar"
 "42"
 ```
 
