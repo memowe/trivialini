@@ -5,7 +5,6 @@ on: [push, pull_request, workflow_dispatch]
 env:
   HADDOCK_DIR: haddock-html
   PAGES_DIR: gh-pages
-  PAGES_APIDOCS_DIR: apidocs
 
 jobs:
 
@@ -58,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: haddock-html
-          path: ${{ env.PAGES_DIR }}/${{ env.PAGES_APIDOCS_DIR }}
+          path: ${{ env.PAGES_DIR }}
 
       - name: Disable GitHub Pages' Jekyll
         run: touch $PAGES_DIR/.nojekyll

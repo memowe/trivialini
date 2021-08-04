@@ -1,4 +1,12 @@
--- | The parser of ini files
+{-|
+Module      : Trivialini.Parser
+Description : Parsing of Ini strings
+Copyright   : (c) 2021 Mirko Westermeier
+License     : MIT
+
+Parsing of 'Ini' strings
+-}
+
 module Trivialini.Parser ( readIni, parseIni ) where
 
 import Trivialini.Ini ( Ini )
@@ -43,10 +51,10 @@ sections = do
     secs <- many section
     return $ fromList secs
 
--- | Parse an ini string
+-- | Read 'Ini' data from a given 'String' in ini format.
 readIni :: String -> Ini
 readIni = fst . last . readP_to_S sections
 
--- | Ini string parser, useful for debugging
+-- | The 'ReadS' parser of 'Ini' data, useful for debugging.
 parseIni :: ReadS Ini
 parseIni = readP_to_S sections
