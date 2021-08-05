@@ -53,7 +53,7 @@ sections = do
 
 -- | Read 'Ini' data from a given 'String' in ini format.
 readIni :: String -> Ini
-readIni = fst . last . readP_to_S sections
+readIni = fst . last . parseIni
 
 -- | The 'ReadS' parser of 'Ini' data, useful for debugging.
 parseIni :: ReadS Ini
