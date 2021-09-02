@@ -11,7 +11,7 @@ module Trivialini.Ini
   (
   -- * Ini data is a Map of Maps
     Ini(..)
-  , showIni ) where
+  ) where
 
 import Data.Map ( assocs, Map )
 
@@ -25,9 +25,8 @@ newtype Ini = Ini { pairMap :: Map String (Map String String) }
 
 -- | Stringification of 'Ini' data. The result can be parsed again as 'Ini'
 -- data.
-showIni :: Ini -> String
-showIni = unlines . map section . assocs
-  where
-    section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
-    pairs               = unlines . map pair . assocs
-    pair (k, v)         = k ++ " = " ++ v
+instance Show Ini where
+  show = unlines . map section . assocs . pairMap
+    where section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
+          pairs               = unlines . map pair . assocs
+          pair (k, v)         = k ++ " = " ++ show v
