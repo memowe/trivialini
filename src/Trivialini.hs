@@ -76,6 +76,6 @@ instance Read Ini where
             key <- trim <$> no "\n[="
             val <- trim <$> between (char '=') nls (no "\n")
             return (key, val)
-          nls     = skipMany1 (char '\n')
+          nls     = munch1 (=='\n')
           no      = munch1 . flip notElem
           trim    = dropWhile (==' ') . dropWhileEnd (==' ')
