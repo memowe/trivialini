@@ -18,7 +18,10 @@ import Data.Map ( assocs, Map )
 -- | As ini files consist of sections with a name, each with a list of
 -- key-value pairs, A "two-dimensional" 'Map' of 'String's seems to be very
 -- natural.
-type Ini = Map String (Map String String)
+newtype Ini = Ini { pairMap :: Map String (Map String String) }
+  deriving
+    ( Eq -- ^ Default Eq instance
+    )
 
 -- | Stringification of 'Ini' data. The result can be parsed again as 'Ini'
 -- data.
