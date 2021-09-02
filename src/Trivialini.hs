@@ -43,7 +43,7 @@ and values are trimmed.
 
 -- | Read 'Ini' data from a given filename
 readIniFile :: FilePath -> IO IniMap
-readIniFile file = pairMap . read <$> readFile file
+readIniFile file = sections . read <$> readFile file
 
 -- | As ini files consist of sections with a name, each with a list of
 -- key-value pairs, A "two-dimensional" 'Map' of 'String's seems to be very
@@ -51,7 +51,7 @@ readIniFile file = pairMap . read <$> readFile file
 type IniMap = Map String (Map String String)
 
 -- | A wrapper type around an 'IniMap' with 'Show' and 'Read' instances.
-newtype Ini = Ini { pairMap :: IniMap }
+newtype Ini = Ini { sections :: IniMap }
   deriving
     ( Eq -- ^ Default Eq instance
     )
