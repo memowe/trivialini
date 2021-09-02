@@ -2,8 +2,7 @@ module Main where
 
 import Test.Tasty         ( defaultMain, testGroup, TestTree, withResource )
 import Test.Tasty.HUnit   ( testCase, (@?=) )
-import Trivialini         ( readIniFile )
-import Trivialini.Ini     ( Ini(..), showIni )
+import Trivialini         ( Ini(..), IniMap, readIniFile )
 import Data.Map           ( fromList )
 import System.FilePath    ( (</>) )
 import System.Directory   ( getTemporaryDirectory, removeFile )
@@ -18,23 +17,24 @@ exampleIni =
   \ baz quux   =      quuux\n\
   \"
 
-expectedIni = fromList [
+expectedIni = Ini $ fromList [
     ("xnorfzt", fromList [("foo", "bar"), ("x", "17"), ("answer", "42")]),
     ("section name", fromList [("baz quux", "quuux")])
   ]
 
 testIniParsing = testGroup "Ini parsing"
   [ testCase "Complex ini data" $
-      readIni exampleIni @?= expectedIni
+      read exampleIni @?= expectedIni
   , testCase "parse . show . parse = parse" $
-      (readIni . showIni . readIni) exampleIni @?= expectedIni
+      let intermediatini  = read exampleIni :: Ini
+      in  (read . show) intermediatini @?= expectedIni
   ]
 
-testIniIO :: IO (FilePath, Ini) -> TestTree
+testIniIO :: IO (FilePath, IniMap) -> TestTree
 testIniIO ioData = testGroup "Read ini file"
   [ testCase "Expected complete ini data" $ do
-      ini <- snd <$> ioData
-      ini @?= expectedIni
+      iniMap <- snd <$> ioData
+      iniMap @?= sections expectedIni
   ]
 
 testIniFileReading = withResource io cleanup testIniIO
