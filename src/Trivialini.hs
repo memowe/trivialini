@@ -59,10 +59,10 @@ newtype Ini = Ini { sections :: IniMap }
 -- | Stringification of 'Ini' data. The result can be parsed again as 'Ini'
 -- data.
 instance Show Ini where
-  show = unlines . map section . assocs . pairMap
+  show = unlines . map section . assocs . sections
     where section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
           pairs               = unlines . map pair . assocs
-          pair (k, v)         = k ++ " = " ++ show v
+          pair (k, v)         = k ++ " = " ++ v
 
 -- | Parsing of Ini strings.
 instance Read Ini where
