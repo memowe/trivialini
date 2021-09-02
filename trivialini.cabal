@@ -1,5 +1,5 @@
 name:                trivialini
-version:             0.3.1.0
+version:             0.4.0.0
 synopsis:            Ultra light weight ini file parser
 homepage:            https://github.com/memowe/trivialini
 license:             MIT

@@ -1,6 +1,6 @@
 # Revision history for trivialini
 
-## ????
+## 0.4.0.0 -- 2021-09-02
 
 * Breaking changes:
     * Change Ini type alias back to full type
