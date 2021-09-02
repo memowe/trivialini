@@ -12,8 +12,7 @@ extra-source-files:  CHANGELOG.md, README.md
 library
   exposed-modules:
     Trivialini,
-    Trivialini.Ini,
-    Trivialini.Parser
+    Trivialini.Ini
   build-depends:
     base,
     containers

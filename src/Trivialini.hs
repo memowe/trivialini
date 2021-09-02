@@ -15,7 +15,6 @@ module Trivialini
   ) where
 
 import Trivialini.Ini ( Ini(..), showIni )
-import Trivialini.Parser ( readIni )
 
 {- $intro
 Consider a simple ini file @config.ini@ like this:
