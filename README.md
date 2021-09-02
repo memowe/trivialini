@@ -21,7 +21,7 @@ name = Boaty McBoatface
 
 There are two *sections* (inbetween `[` and `]`) defined, `something` and `something else`. These sections contain a dictionary of Strings each, the keys being some string followed by `=`, and anything else until end of the line as values. The leading and trailing spaces in section headers, keys and values are trimmed.
 
-**trivialini** parses this data structure as an `Ini`, which is simply a map of maps of strings:
+**trivialini** simply parses a map of maps of strings from this data:
 
 ```bash
 $ cat config.ini

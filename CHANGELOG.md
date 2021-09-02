@@ -1,5 +1,12 @@
 # Revision history for trivialini
 
+## ????
+
+* Breaking changes:
+    * Change Ini type alias back to full type
+    * Add stringification and parsing as Show and Read instances
+    * Merge small modules
+
 ## 0.3.1.0 -- 2021-07-27
 
 * Allow whitespace in keys (Alexander Pankoff @ccntrq)
