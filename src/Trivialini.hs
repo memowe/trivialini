@@ -68,14 +68,12 @@ instance Show Ini where
 instance Read Ini where
   readsPrec _ = readP_to_S parser
     where parser  = Ini . fromList <$> many section
-          section = do
-            name  <- trim <$> between (char '[') (char ']' >> nls) (no "=\n]")
-            pairs <- many pair
-            return (name, fromList pairs)
-          pair    = do
-            key <- trim <$> no "\n[="
-            val <- trim <$> between (char '=') nls (no "\n")
-            return (key, val)
+          section = do  name  <- trim <$> between (char '[') (char ']' >> nls) (no "=\n]")
+                        pairs <- many pair
+                        return (name, fromList pairs)
+          pair    = do  key <- trim <$> no "\n[="
+                        val <- trim <$> between (char '=') nls (no "\n")
+                        return (key, val)
           nls     = munch1 (=='\n')
           no      = munch1 . flip notElem
           trim    = dropWhile (==' ') . dropWhileEnd (==' ')

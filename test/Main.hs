@@ -7,15 +7,14 @@ import Data.Map           ( fromList )
 import System.FilePath    ( (</>) )
 import System.Directory   ( getTemporaryDirectory, removeFile )
 
-exampleIni =
-  "[xnorfzt]\n\
-  \foo = bar\n\
-  \\n\
-  \x=17\n\
-  \answer    =42\n\
-  \[section name]\n\
-  \ baz quux   =      quuux\n\
-  \"
+exampleIni =  "[xnorfzt]\n\
+              \foo = bar\n\
+              \\n\
+              \x=17\n\
+              \answer    =42\n\
+              \[section name]\n\
+              \ baz quux   =      quuux\n\
+              \"
 
 expectedIni = Ini $ fromList [
     ("xnorfzt", fromList [("foo", "bar"), ("x", "17"), ("answer", "42")]),
@@ -38,16 +37,14 @@ testIniIO ioData = testGroup "Read ini file"
   ]
 
 testIniFileReading = withResource io cleanup testIniIO
-  where
-    io = do
-      name  <- write
-      ini   <- readIniFile name
-      return (name, ini)
-    write = do
-      name <- (</> "trivialini-test.ini") <$> getTemporaryDirectory
-      writeFile name exampleIni
-      return name
-    cleanup = removeFile . fst
+  where io      = do  name  <- write
+                      ini   <- readIniFile name
+                      return (name, ini)
+        write   = do  name <- tmpFile
+                      writeFile name exampleIni
+                      return name
+        tmpFile = (</> "trivialini-test.ini") <$> getTemporaryDirectory
+        cleanup = removeFile . fst
 
 main = defaultMain $ testGroup "Unit tests"
   [ testIniParsing
