@@ -4,7 +4,7 @@
 
 [![Build and test](https://github.com/memowe/trivialini/actions/workflows/test.yml/badge.svg)](https://github.com/memowe/trivialini/actions/workflows/test.yml)
 [![Publish API docs](https://github.com/memowe/trivialini/actions/workflows/haddock-pages.yml/badge.svg)](https://github.com/memowe/trivialini/actions/workflows/haddock-pages.yml)
-[![API docs](https://img.shields.io/badge/Haddock-Documentation-8a80a8?style=flat&logo=haskell&logoColor=lightgray)](https://mirko.westermeier.de/trivialini/)
+[![API docs](https://img.shields.io/badge/Haddock-Documentation-8a80a8?style=flat&logo=haskell&logoColor=lightgray)](https://mirko.westermeier.de/trivialini/Trivialini.html)
 
 ## Overview
 
