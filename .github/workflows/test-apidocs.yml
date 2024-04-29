@@ -63,7 +63,7 @@ jobs:
       run: mv $(find haddock_build -wholename '*doc/html/trivialini' | head -n 1) haddock_html
 
     - name: Store generated API docs as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-pages-artifact@v2
       with:
         path: haddock_html
 
