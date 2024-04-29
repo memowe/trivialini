@@ -41,7 +41,7 @@ the line as values. The leading and trailing spaces in section headers, keys
 and values are trimmed.
 -}
 
--- | Read 'Ini' data from a given filename
+-- | Read t'Ini' data from a given filename
 readIniFile :: FilePath -> IO IniMap
 readIniFile file = sections . read <$> readFile file
 
@@ -56,7 +56,7 @@ newtype Ini = Ini { sections :: IniMap }
     ( Eq -- ^ Default Eq instance
     )
 
--- | Stringification of 'Ini' data. The result can be parsed again as 'Ini'
+-- | Stringification of t'Ini' data. The result can be parsed again as t'Ini'
 -- data.
 instance Show Ini where
   show = unlines . map section . assocs . sections
