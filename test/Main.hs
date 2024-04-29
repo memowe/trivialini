@@ -1,8 +1,11 @@
 module Main where
 
-import Trivialini
 import Test.Hspec
-import Data.Map
+import Test.QuickCheck
+import Test.Hspec.QuickCheck
+
+import Trivialini
+import Data.Map (empty, elems, fromList)
 import System.IO.Temp
 import System.IO
 
@@ -22,23 +25,31 @@ expectedIni = Ini $ fromList [
     ("section name", fromList [("baz quux", "quuux")])
   ]
 
-testIniParsing :: Spec
-testIniParsing = describe "Ini parsing" $ do
-  it "Complex ini data" $
+testIniParsingExample :: Spec
+testIniParsingExample = describe "Example data parsing" $ do
+  it "Correct INI data" $
     read exampleIni `shouldBe` expectedIni
-  it "parse . show . parse = parse" $
+  it "read . show changes nothing" $
     let intermediatini = read exampleIni :: Ini
     in  (read . show) intermediatini `shouldBe` expectedIni
+
+testIniParsingArbitrary :: Spec
+testIniParsingArbitrary = describe "Arbitrary data parsing" $ do
+  prop "read . show changes nothing" $ \iniMap ->
+    (iniMap /= empty && (empty `notElem` elems iniMap)) ==>
+      let ini = Ini iniMap
+      in  (sections . read . show) ini `shouldBe` iniMap
 
 testIniFileReading :: Spec
 testIniFileReading = describe "Read ini file" $ do
   loadedIni <- runIO $ withSystemTempFile "trivialini-test.ini" $ \fp h -> do
     hPutStr h exampleIni >> hClose h
     readIniFile fp
-  it "Expected complete ini data" $
+  it "Correct example INI data" $
     loadedIni `shouldBe` sections expectedIni
 
 main :: IO ()
-main = hspec $ describe "Unit tests" $ do
-  testIniParsing
+main = hspec $ describe "Ini parsing tests" $ do
+  testIniParsingExample
+  testIniParsingArbitrary
   testIniFileReading

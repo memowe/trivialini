@@ -27,6 +27,7 @@ Test-Suite test-trivialini
   build-depends:
     trivialini,
     hspec,
+    QuickCheck,
     temporary
   hs-source-dirs: test
   main-is: Main.hs
