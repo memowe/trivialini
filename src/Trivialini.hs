@@ -17,10 +17,10 @@ module Trivialini
   , Ini(..)
   ) where
 
-import Data.Map ( assocs, Map, fromList )
-import Data.List ( dropWhileEnd )
+import Data.Map (Map)
+import qualified  Data.Map as M
+import Data.List
 import Text.ParserCombinators.ReadP
-    ( between, char, many, munch1, readP_to_S )
 
 {- $intro
 Consider a simple ini file @config.ini@ like this:
@@ -59,18 +59,18 @@ newtype Ini = Ini { sections :: IniMap }
 -- | Stringification of t'Ini' data. The result can be parsed again as t'Ini'
 -- data.
 instance Show Ini where
-  show = unlines . map section . assocs . sections
+  show = unlines . map section . M.assocs . sections
     where section (name, sec) = "[" ++ name ++ "]\n" ++ pairs sec
-          pairs               = unlines . map pair . assocs
+          pairs               = unlines . map pair . M.assocs
           pair (k, v)         = k ++ " = " ++ v
 
 -- | Parsing of Ini strings.
 instance Read Ini where
   readsPrec _ = readP_to_S parser
-    where parser  = Ini . fromList <$> many section
+    where parser  = Ini . M.fromList <$> many section
           section = do  name  <- trim <$> between (char '[') (char ']' >> nls) (no "=\n]")
                         pairs <- many pair
-                        return (name, fromList pairs)
+                        return (name, M.fromList pairs)
           pair    = do  key <- trim <$> no "\n[="
                         val <- trim <$> between (char '=') nls (no "\n")
                         return (key, val)
