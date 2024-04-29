@@ -20,7 +20,7 @@ module Trivialini
 import Data.Map ( assocs, Map, fromList )
 import Data.List ( dropWhileEnd )
 import Text.ParserCombinators.ReadP
-    ( between, char, many, munch1, readP_to_S, skipMany1 )
+    ( between, char, many, munch1, readP_to_S )
 
 {- $intro
 Consider a simple ini file @config.ini@ like this:
