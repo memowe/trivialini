@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ghc-version: ['9.4', '9.6']
+        ghc-version: ['8.10', '9.2', '9.4', '9.6', '9.8']
     steps:
 
     - name: Set up GHC ${{ matrix.ghc-version }}
