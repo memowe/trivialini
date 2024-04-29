@@ -26,9 +26,7 @@ Test-Suite test-trivialini
   type: exitcode-stdio-1.0
   build-depends:
     trivialini,
-    tasty,
-    tasty-hunit,
-    filepath,
-    directory
+    hspec,
+    temporary
   hs-source-dirs: test
   main-is: Main.hs
