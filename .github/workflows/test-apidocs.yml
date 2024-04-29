@@ -1,0 +1,83 @@
+name: Build, Test, API Docs
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build_test_docs:
+    name: GHC ${{ matrix.ghc-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        ghc-version: ['8.10', '9.2', '9.4', '9.6', '9.8']
+    steps:
+
+    - name: Set up GHC ${{ matrix.ghc-version }}
+      uses: haskell-actions/setup@v2
+      id: setup
+      with:
+        ghc-version: ${{ matrix.ghc-version }}
+        cabal-version: 'latest'
+        cabal-update: true
+
+    - name: Checkout repository content
+      uses: actions/checkout@v3
+
+    - name: Configure the build
+      run: |
+        cabal configure --enable-tests
+        cabal build --dry-run
+      # The last step generates dist-newstyle/cache/plan.json for the cache key
+
+    - name: Restore cached dependencies
+      uses: actions/cache/restore@v3
+      id: cache
+      env:
+        key: ${{ runner.os }}-ghc-${{ steps.setup-outputs.ghc-version }}-cabal-${{ steps.setup.outputs.cabal-version }}
+      with:
+        path: ${{ steps.setup.outputs.cabal-store }}
+        key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+        restore-keys: ${{ env.key }}
+
+    - name: Install dependencies
+      run: cabal build all --only-dependencies --enable-tests
+
+    - name: Build project
+      run: cabal build --enable-tests all
+
+    - name: Run tests
+      run: cabal test --test-show-details=streaming
+
+    - name: Build API docs
+      run: cabal haddock --builddir=haddock_build --haddock-hyperlinked-source --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs'
+
+    - name: Save cached dependencies
+      uses: actions/cache/save@v3
+      if: ${{ steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
+      with:
+        path: ${{ steps.setup.outputs.cabal-store }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}
+
+    - name: Collect generated API docs
+      run: mv $(find haddock_build -wholename '*doc/html/trivialini' | head -n 1) haddock_html
+
+    - name: Store generated API docs as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: haddock_html
+
+  deploy_docs:
+    needs: build_test_docs
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v2
