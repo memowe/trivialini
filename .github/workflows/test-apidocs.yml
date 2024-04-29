@@ -1,9 +1,9 @@
-name: Build and test
+name: Build, Test, API Docs
 
 on: [push, workflow_dispatch]
 
 jobs:
-  test:
+  build_test_docs:
     name: GHC ${{ matrix.ghc-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -49,9 +49,35 @@ jobs:
     - name: Run tests
       run: cabal test --test-show-details=streaming
 
+    - name: Build API docs
+      run: cabal haddock --builddir=haddock_build --haddock-hyperlinked-source --haddock-html-location='https://hackage.haskell.org/package/$pkg-$version/docs'
+
     - name: Save cached dependencies
       uses: actions/cache/save@v3
       if: ${{ steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
       with:
         path: ${{ steps.setup.outputs.cabal-store }}
         key: ${{ steps.cache.outputs.cache-primary-key }}
+
+    - name: Collect generated API docs
+      run: mv $(find haddock_build -wholename '*doc/html/trivialini' | head -n 1) haddock_html
+
+    - name: Store generated API docs as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: haddock_html
+
+  deploy_docs:
+    needs: build_test_docs
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v2
