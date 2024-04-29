@@ -4,14 +4,21 @@ on: [push, workflow_dispatch]
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    name: GHC ${{ matrix.ghc-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        ghc-version: ['9.4', '9.6']
     steps:
 
-    - name: Set up haskell
+    - name: Set up GHC ${{ matrix.ghc-version }}
       uses: haskell/actions/setup@v1
       with:
-        ghc-version: '9.0.1'
-        cabal-version: '3.4'
+        ghc-version: ${{ matrix.ghc-version }}
+        cabal-version: 'latest'
+        cabal-update: true
 
     - name: Checkout repository content
       uses: actions/checkout@v2
