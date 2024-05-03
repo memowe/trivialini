@@ -1,12 +1,17 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Test.Tasty         ( defaultMain, testGroup, TestTree, withResource )
-import Test.Tasty.HUnit   ( testCase, (@?=) )
-import Trivialini         ( Ini(..), IniMap, readIniFile )
-import Data.Map           ( fromList )
-import System.FilePath    ( (</>) )
-import System.Directory   ( getTemporaryDirectory, removeFile )
+import Test.Hspec
+import Test.QuickCheck
+import Test.Hspec.QuickCheck
+import TestSafeTypes
 
+import Trivialini
+import Data.Map (empty, elems, fromList)
+import System.IO.Temp
+import System.IO
+
+exampleIni :: String
 exampleIni =  "[xnorfzt]\n\
               \foo = bar\n\
               \\n\
@@ -16,37 +21,39 @@ exampleIni =  "[xnorfzt]\n\
               \ baz quux   =      quuux\n\
               \"
 
+expectedIni :: Ini
 expectedIni = Ini $ fromList [
     ("xnorfzt", fromList [("foo", "bar"), ("x", "17"), ("answer", "42")]),
     ("section name", fromList [("baz quux", "quuux")])
   ]
 
-testIniParsing = testGroup "Ini parsing"
-  [ testCase "Complex ini data" $
-      read exampleIni @?= expectedIni
-  , testCase "parse . show . parse = parse" $
-      let intermediatini  = read exampleIni :: Ini
-      in  (read . show) intermediatini @?= expectedIni
-  ]
+testIniParsingExample :: Spec
+testIniParsingExample = describe "Example data parsing" $ do
+  it "Correct INI data" $
+    read exampleIni `shouldBe` expectedIni
+  it "read . show changes nothing" $
+    let intermediatini = read exampleIni :: Ini
+    in  (read . show) intermediatini `shouldBe` expectedIni
 
-testIniIO :: IO (FilePath, IniMap) -> TestTree
-testIniIO ioData = testGroup "Read ini file"
-  [ testCase "Expected complete ini data" $ do
-      iniMap <- snd <$> ioData
-      iniMap @?= sections expectedIni
-  ]
+testIniParsingArbitrary :: Spec
+testIniParsingArbitrary = describe "Arbitrary data parsing" $ do
+  modifyMaxSuccess (const 20) $
+    prop "read . show changes nothing" $ \iniMap ->
+      (iniMap /= empty && (empty `notElem` elems iniMap)) ==>
+        let ini = Ini iniMap
+        in  (sections . read . show) ini `shouldBe` iniMap
 
-testIniFileReading = withResource io cleanup testIniIO
-  where io      = do  name  <- write
-                      ini   <- readIniFile name
-                      return (name, ini)
-        write   = do  name <- tmpFile
-                      writeFile name exampleIni
-                      return name
-        tmpFile = (</> "trivialini-test.ini") <$> getTemporaryDirectory
-        cleanup = removeFile . fst
+testIniFileReading :: Spec
+testIniFileReading = describe "Read ini file" $ do
+  loadedIni <- runIO $ withSystemTempFile "trivialini-test.ini" $ \fp h -> do
+    hPutStr h exampleIni >> hClose h
+    readIniFile fp
+  it "Correct example INI data" $
+    loadedIni `shouldBe` sections expectedIni
 
-main = defaultMain $ testGroup "Unit tests"
-  [ testIniParsing
-  , testIniFileReading
-  ]
+main :: IO ()
+main = hspec $ describe "Ini tests" $ do
+  testArbinitrary
+  testIniParsingExample
+  testIniParsingArbitrary
+  testIniFileReading
