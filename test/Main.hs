@@ -3,6 +3,7 @@ module Main where
 import Test.Hspec
 import Test.QuickCheck
 import Test.Hspec.QuickCheck
+import TestSafeTypes
 
 import Trivialini
 import Data.Map (empty, elems, fromList)
@@ -49,7 +50,8 @@ testIniFileReading = describe "Read ini file" $ do
     loadedIni `shouldBe` sections expectedIni
 
 main :: IO ()
-main = hspec $ describe "Ini parsing tests" $ do
+main = hspec $ describe "Ini tests" $ do
+  testArbinitrary
   testIniParsingExample
   testIniParsingArbitrary
   testIniFileReading

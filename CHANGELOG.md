@@ -1,5 +1,10 @@
 # Revision history for trivialini
 
+## 0.5.0.0 -- 2024-03-05
+
+* Breaking changes:
+    * Use safer types
+
 ## 0.4.0.0 -- 2021-09-02
 
 * Breaking changes:

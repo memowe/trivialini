@@ -18,7 +18,8 @@ common basic
 library
   import: basic
   exposed-modules:
-    Trivialini
+      Trivialini
+    , Trivialini.SafeTypes
   hs-source-dirs: src
 
 Test-Suite test-trivialini
@@ -29,5 +30,7 @@ Test-Suite test-trivialini
     hspec,
     QuickCheck,
     temporary
+  other-modules:
+    TestSafeTypes
   hs-source-dirs: test
   main-is: Main.hs
