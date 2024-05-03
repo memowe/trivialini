@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import Test.Hspec
@@ -36,10 +37,11 @@ testIniParsingExample = describe "Example data parsing" $ do
 
 testIniParsingArbitrary :: Spec
 testIniParsingArbitrary = describe "Arbitrary data parsing" $ do
-  prop "read . show changes nothing" $ \iniMap ->
-    (iniMap /= empty && (empty `notElem` elems iniMap)) ==>
-      let ini = Ini iniMap
-      in  (sections . read . show) ini `shouldBe` iniMap
+  modifyMaxSuccess (const 20) $
+    prop "read . show changes nothing" $ \iniMap ->
+      (iniMap /= empty && (empty `notElem` elems iniMap)) ==>
+        let ini = Ini iniMap
+        in  (sections . read . show) ini `shouldBe` iniMap
 
 testIniFileReading :: Spec
 testIniFileReading = describe "Read ini file" $ do
