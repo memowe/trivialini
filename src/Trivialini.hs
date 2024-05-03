@@ -13,7 +13,6 @@ module Trivialini
   -- $intro
     readIniFile
   -- * Ini data is a Map of Maps
-  , IniMap
   , Ini(..)
   ) where
 
@@ -44,18 +43,15 @@ and values are trimmed.
 -}
 
 -- | Read t'Ini' data from a given filename
-readIniFile :: FilePath -> IO IniMap
-readIniFile file = sections . read <$> readFile file
+readIniFile :: FilePath -> IO Ini
+readIniFile = fmap read . readFile
 
 -- | As ini files consist of sections with a name, each with a list of
 -- key-value pairs, A "two-dimensional" 'Map' of 'String's seems to be very
 -- natural. However, since the formatting of ini files doesn't allow arbitrary
 -- arbitrary characters, restricted types are used here, that are thin wrappers
 -- around 'String's:
-type IniMap = Map IniHeading (Map IniKey IniValue)
-
--- | A wrapper type around an 'IniMap' with 'Show' and 'Read' instances.
-newtype Ini = Ini { sections :: IniMap }
+newtype Ini = Ini { sections :: Map IniHeading (Map IniKey IniValue) }
   deriving
     ( Eq -- ^ Default Eq instance
     )

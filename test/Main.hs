@@ -49,7 +49,7 @@ testIniFileReading = describe "Read ini file" $ do
     hPutStr h exampleIni >> hClose h
     readIniFile fp
   it "Correct example INI data" $
-    loadedIni `shouldBe` sections expectedIni
+    loadedIni `shouldBe` expectedIni
 
 main :: IO ()
 main = hspec $ describe "Ini tests" $ do
