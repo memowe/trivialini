@@ -1,7 +1,7 @@
 {-|
 Module      : Trivialini
 Description : Ultra light weight ini file parser
-Copyright   : (c) 2021 Mirko Westermeier
+Copyright   : (c) 2021-2024 Mirko Westermeier
 License     : MIT
 
 Ultra light weight ini file parser

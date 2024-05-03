@@ -43,6 +43,6 @@ bar = 42
 
 ## Author and License
 
-Copyright (c) 2021 Mirko Westermeier
+Copyright (c) 2021-2024 Mirko Westermeier
 
 Released under the MIT license. See [LICENSE](LICENSE) for details.
