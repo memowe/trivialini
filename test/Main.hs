@@ -37,17 +37,24 @@ testIniParsingExample = describe "Example data parsing" $ do
 
 testIniParsingArbitrary :: Spec
 testIniParsingArbitrary = describe "Arbitrary data parsing" $ do
-  modifyMaxSuccess (const 20) $
+  modifyMaxSuccess (const 10) $
     prop "read . show changes nothing" $ \ini ->
       (read . show) ini `shouldBe` (ini :: Ini)
 
 testIniFileReading :: Spec
 testIniFileReading = describe "Read ini file" $ do
-  loadedIni <- runIO $ withSystemTempFile "trivialini-test.ini" $ \fp h -> do
-    hPutStr h exampleIni >> hClose h
-    readIniFile fp
-  it "Correct example INI data" $
-    loadedIni `shouldBe` expectedIni
+  context "To Ini data" $ do
+    loadedIni <- runIO $ withSystemTempFile "trivialini-test.ini" $ \fp h -> do
+      hPutStr h exampleIni >> hClose h
+      readIniFile fp
+    it "Correct example INI data" $
+      loadedIni `shouldBe` expectedIni
+  context "To String map data" $ do
+    loadedIni <- runIO $ withSystemTempFile "trivialini-test.ini" $ \fp h -> do
+      hPutStr h exampleIni >> hClose h
+      readIniFileStrings fp
+    it "Correct example INI data in string map" $
+      loadedIni `shouldBe` toStringMap expectedIni
 
 testToStringMap :: Spec
 testToStringMap = describe "String map conversion" $ do

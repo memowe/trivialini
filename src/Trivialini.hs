@@ -12,6 +12,7 @@ module Trivialini
   -- * Ini files and data
   -- $intro
     readIniFile
+  , readIniFileStrings
   -- * Ini data is a Map of Maps
   , Ini(..)
   -- * Simple 'String' 'Map' conversion
@@ -47,6 +48,10 @@ and values are trimmed.
 -- | Read t'Ini' data from a given filename
 readIniFile :: FilePath -> IO Ini
 readIniFile = fmap read . readFile
+
+-- | Like 'readIniFile', but results in a stringified nested map
+readIniFileStrings :: FilePath -> IO (Map String (Map String String))
+readIniFileStrings = fmap (toStringMap . read) . readFile
 
 -- | As ini files consist of sections with a name, each with a list of
 -- key-value pairs, A "two-dimensional" 'Map' of 'String's seems to be very
