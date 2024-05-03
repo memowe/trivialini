@@ -4,6 +4,7 @@
 
 * Breaking changes:
     * Use safer types
+    * Get rid of intermediate IniMap type alias
 
 ## 0.4.0.0 -- 2021-09-02
 

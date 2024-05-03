@@ -12,13 +12,15 @@ module Trivialini
   -- * Ini files and data
   -- $intro
     readIniFile
+  , readIniFileStrings
   -- * Ini data is a Map of Maps
-  , IniMap
   , Ini(..)
+  -- * Simple 'String' 'Map' conversion
+  , toStringMap
   ) where
 
 import Trivialini.SafeTypes
-import Data.Map (Map, fromList, assocs)
+import Data.Map (Map, fromList, assocs, mapKeys)
 import Data.List
 import Data.Maybe
 import Text.ParserCombinators.ReadP
@@ -44,18 +46,19 @@ and values are trimmed.
 -}
 
 -- | Read t'Ini' data from a given filename
-readIniFile :: FilePath -> IO IniMap
-readIniFile file = sections . read <$> readFile file
+readIniFile :: FilePath -> IO Ini
+readIniFile = fmap read . readFile
+
+-- | Like 'readIniFile', but results in a stringified nested map
+readIniFileStrings :: FilePath -> IO (Map String (Map String String))
+readIniFileStrings = fmap (toStringMap . read) . readFile
 
 -- | As ini files consist of sections with a name, each with a list of
 -- key-value pairs, A "two-dimensional" 'Map' of 'String's seems to be very
 -- natural. However, since the formatting of ini files doesn't allow arbitrary
 -- arbitrary characters, restricted types are used here, that are thin wrappers
 -- around 'String's:
-type IniMap = Map IniHeading (Map IniKey IniValue)
-
--- | A wrapper type around an 'IniMap' with 'Show' and 'Read' instances.
-newtype Ini = Ini { sections :: IniMap }
+newtype Ini = Ini { sections :: Map IniHeading (Map IniKey IniValue) }
   deriving
     ( Eq -- ^ Default Eq instance
     )
@@ -83,3 +86,8 @@ instance Read Ini where
           nls     = munch1 (=='\n')
           no      = munch1 . flip notElem
           trim    = dropWhile (==' ') . dropWhileEnd (==' ')
+
+-- | Convert ini data (with restricted types) to nested 'String' 'Map's.
+toStringMap :: Ini -> Map String (Map String String)
+toStringMap = mapKeys getHeading . fmap sectionToStringMap . sections
+  where sectionToStringMap = mapKeys getKey . fmap getValue

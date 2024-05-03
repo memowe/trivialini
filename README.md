@@ -29,7 +29,7 @@ bar = 42
 ```
 
 ```
-λ> ini <- readIniFile "config.ini"
+λ> ini <- readIniFileStrings "config.ini"
 λ> ini ! "foo" ! "bar"
 "42"
 ```
