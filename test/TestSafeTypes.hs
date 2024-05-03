@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 module TestSafeTypes where
 
+import Trivialini
 import Trivialini.SafeTypes
 import Test.Hspec
 import Test.QuickCheck
@@ -18,6 +19,9 @@ instance Arbitrary IniKey where
 
 instance Arbitrary IniValue where
   arbitrary = arbitrary `suchThatMap` mkVal
+
+instance Arbitrary Ini where
+  arbitrary = Ini <$> arbitrary
 
 testArbinitrary :: Spec
 testArbinitrary = describe "Safe types tests" $ do

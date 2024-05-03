@@ -38,10 +38,8 @@ testIniParsingExample = describe "Example data parsing" $ do
 testIniParsingArbitrary :: Spec
 testIniParsingArbitrary = describe "Arbitrary data parsing" $ do
   modifyMaxSuccess (const 20) $
-    prop "read . show changes nothing" $ \iniMap ->
-      (iniMap /= empty && (empty `notElem` elems iniMap)) ==>
-        let ini = Ini iniMap
-        in  (sections . read . show) ini `shouldBe` iniMap
+    prop "read . show changes nothing" $ \ini ->
+      (read . show) ini `shouldBe` (ini :: Ini)
 
 testIniFileReading :: Spec
 testIniFileReading = describe "Read ini file" $ do
