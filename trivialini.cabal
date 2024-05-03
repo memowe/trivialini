@@ -1,6 +1,6 @@
 cabal-version:       3.0
 name:                trivialini
-version:             0.4.0.0
+version:             0.5.0.0
 synopsis:            Ultra light weight ini file parser
 homepage:            https://github.com/memowe/trivialini
 license:             MIT
