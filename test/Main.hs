@@ -49,9 +49,20 @@ testIniFileReading = describe "Read ini file" $ do
   it "Correct example INI data" $
     loadedIni `shouldBe` expectedIni
 
+testToStringMap :: Spec
+testToStringMap = describe "String map conversion" $ do
+  -- Would be nice to have property tests here, but we would
+  -- essentially be testing our implementation with itself.
+  it "Correct string version of example ini data" $
+    toStringMap (read "[foo]\nbar=17\n[baz]\nquux=42\n")
+      `shouldBe` fromList [ ("foo", fromList [("bar", "17")])
+                          , ("baz", fromList [("quux", "42")])
+                          ]
+
 main :: IO ()
 main = hspec $ describe "Ini tests" $ do
   testArbinitrary
   testIniParsingExample
   testIniParsingArbitrary
   testIniFileReading
+  testToStringMap

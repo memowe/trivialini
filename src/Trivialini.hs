@@ -14,10 +14,12 @@ module Trivialini
     readIniFile
   -- * Ini data is a Map of Maps
   , Ini(..)
+  -- * Simple 'String' 'Map' conversion
+  , toStringMap
   ) where
 
 import Trivialini.SafeTypes
-import Data.Map (Map, fromList, assocs)
+import Data.Map (Map, fromList, assocs, mapKeys)
 import Data.List
 import Data.Maybe
 import Text.ParserCombinators.ReadP
@@ -79,3 +81,8 @@ instance Read Ini where
           nls     = munch1 (=='\n')
           no      = munch1 . flip notElem
           trim    = dropWhile (==' ') . dropWhileEnd (==' ')
+
+-- | Convert ini data (with restricted types) to nested 'String' 'Map's.
+toStringMap :: Ini -> Map String (Map String String)
+toStringMap = mapKeys getHeading . fmap sectionToStringMap . sections
+  where sectionToStringMap = mapKeys getKey . fmap getValue
