@@ -2,12 +2,11 @@
 module Main where
 
 import Test.Hspec
-import Test.QuickCheck
 import Test.Hspec.QuickCheck
 import TestSafeTypes
 
 import Trivialini
-import Data.Map (empty, elems, fromList)
+import Data.Map (fromList)
 import System.IO.Temp
 import System.IO
 
